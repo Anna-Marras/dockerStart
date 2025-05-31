@@ -1,0 +1,41 @@
+services:
+  web:
+    build: .
+    container_name: boutique-en-ligne-web
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: boutique
+      DB_USER: root
+      DB_PASSWORD: ""
+
+  db:
+    image: mysql:8.0
+    container_name: boutique-en-ligne-db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: boutique
+      MYSQL_USER: utilisateur
+      MYSQL_PASSWORD: motdepasse
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: boutique-en-ligne-pma
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ""
+    depends_on:
+      - db
+
+volumes:
+  dbdata:
